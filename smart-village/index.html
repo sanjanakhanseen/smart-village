@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Village | Soil Monitoring & Smart Irrigation</title>
+<style>
+
+:root{
+  --green:#176b45;
+  --green-dark:#0e4d31;
+  --green-light:#e9f7ef;
+  --green-soft:#f5faf7;
+  --text:#18332a;
+  --muted:#6b7d75;
+  --white:#fff;
+  --border:#dce9e2;
+  --shadow:0 10px 28px rgba(23,107,69,.10);
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--green-soft);
+  color:var(--text);
+  line-height:1.6;
+}
+a{text-decoration:none;color:inherit}
+header{
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:10;
+}
+.navbar{
+  max-width:1150px;margin:auto;padding:16px 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.logo{font-size:22px;font-weight:800;color:var(--green-dark)}
+.logo span{display:block;font-size:12px;color:var(--muted);font-weight:500}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav a{
+  padding:9px 14px;border-radius:10px;color:var(--muted);
+  font-weight:600;transition:.2s;
+}
+nav a:hover,nav a.active{background:var(--green-light);color:var(--green-dark)}
+.container{max-width:1150px;margin:auto;padding:40px 22px}
+.hero{
+  background:linear-gradient(135deg,#e9f7ef,#fff);
+  border:1px solid var(--border);border-radius:26px;
+  padding:55px 45px;box-shadow:var(--shadow);
+}
+.hero h1{font-size:42px;line-height:1.15;color:var(--green-dark);margin-bottom:16px}
+.hero p{max-width:720px;color:var(--muted);font-size:17px;margin-bottom:25px}
+.btn{
+  display:inline-block;border:0;cursor:pointer;padding:12px 18px;
+  border-radius:11px;background:var(--green);color:white;font-weight:700;
+}
+.btn:hover{background:var(--green-dark)}
+.btn.secondary{background:#fff;color:var(--green-dark);border:1px solid var(--border)}
+.section-title{margin:38px 0 18px}
+.section-title h2{font-size:27px;color:var(--green-dark)}
+.section-title p{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{
+  background:#fff;border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;box-shadow:var(--shadow);
+}
+.card h3{margin-bottom:8px;color:var(--green-dark)}
+.card p{color:var(--muted)}
+.icon{
+  width:48px;height:48px;border-radius:14px;background:var(--green-light);
+  display:grid;place-items:center;font-size:24px;margin-bottom:15px;
+}
+.page-head{margin-bottom:28px}
+.page-head h1{font-size:34px;color:var(--green-dark)}
+.page-head p{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
+.stat small{color:var(--muted);font-weight:600}
+.stat .value{font-size:30px;font-weight:800;color:var(--green-dark);margin-top:6px}
+.status{
+  display:inline-block;padding:5px 10px;border-radius:30px;
+  background:var(--green-light);color:var(--green-dark);font-size:13px;font-weight:800;
+}
+.status.off{background:#f1f3f2;color:#66716d}
+.two-col{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-top:20px}
+.info-row{
+  display:flex;justify-content:space-between;gap:15px;
+  padding:13px 0;border-bottom:1px solid var(--border);
+}
+.info-row:last-child{border-bottom:0}
+.info-row span:first-child{color:var(--muted)}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:14px 10px;border-bottom:1px solid var(--border)}
+th{color:var(--green-dark);font-size:14px}
+td{color:#3d5149}
+.table-wrap{overflow-x:auto}
+.control-box{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.mode-btn{padding:11px 18px;border:1px solid var(--border);background:#fff;border-radius:10px;cursor:pointer;font-weight:700}
+.mode-btn.selected{background:var(--green);color:#fff;border-color:var(--green)}
+.pump-btn{padding:14px 24px;border:0;border-radius:12px;color:#fff;font-weight:800;cursor:pointer;background:#777}
+.pump-btn.on{background:var(--green)}
+.pump-btn:disabled{opacity:.45;cursor:not-allowed}
+.notice{
+  margin-top:18px;padding:14px 16px;border-radius:12px;
+  background:var(--green-light);color:var(--green-dark);
+}
+footer{text-align:center;padding:30px 20px;color:var(--muted);font-size:14px}
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .two-col{grid-template-columns:1fr}
+  .hero h1{font-size:34px}
+}
+@media(max-width:620px){
+  .navbar{align-items:flex-start;flex-direction:column}
+  nav{width:100%}
+  nav a{flex:1;text-align:center}
+  .grid,.stats{grid-template-columns:1fr}
+  .hero{padding:35px 25px}
+  .hero h1{font-size:29px}
+  .container{padding:28px 16px}
+}
+
+/* Profile menu */
+.profile-wrap{
+  position:relative;
+  margin-left:18px;
+}
+.profile-btn{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid #dce9e2;
+  background:#fff;
+  color:#18332a;
+  padding:8px 12px;
+  border-radius:22px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600;
+}
+.profile-icon{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  background:#e9f7ef;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#176b45;
+}
+.profile-icon svg{
+  width:18px;
+  height:18px;
+}
+.profile-arrow{
+  font-size:10px;
+  color:#6b7d75;
+}
+.profile-menu{
+  display:none;
+  position:absolute;
+  right:0;
+  top:48px;
+  width:220px;
+  background:#fff;
+  border:1px solid #dce9e2;
+  border-radius:12px;
+  box-shadow:0 12px 30px rgba(0,0,0,.12);
+  padding:10px;
+  z-index:1000;
+}
+.profile-menu.show{display:block;}
+.profile-email{
+  padding:10px 10px 12px;
+  border-bottom:1px solid #edf2ef;
+  color:#6b7d75;
+  font-size:12px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.profile-menu a,
+.profile-menu button{
+  width:100%;
+  display:block;
+  text-align:left;
+  padding:10px;
+  border:0;
+  background:transparent;
+  color:#18332a;
+  text-decoration:none;
+  font-size:13px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.profile-menu a:hover,
+.profile-menu button:hover{
+  background:#f5faf7;
+}
+.profile-menu .logout{
+  color:#b42318;
+}
+@media(max-width:760px){
+  .profile-wrap{margin-left:0;}
+  .profile-btn .profile-name,
+  .profile-arrow{display:none;}
+}
+
+
+
+
+
+
+/* Single-file SPA */
+#appScreen{display:none;}
+.app-page{display:none;}
+#page-home{display:block;}
+
+.profile-wrap{
+  position:relative;
+  margin-left:4px;
+}
+.profile-btn{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  padding:8px 12px;
+  border-radius:22px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:600;
+}
+.profile-icon{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--green-light);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--green);
+}
+.profile-icon svg{width:18px;height:18px;}
+.profile-arrow{font-size:10px;color:var(--muted);}
+.profile-menu{
+  display:none;
+  position:absolute;
+  right:0;top:48px;width:220px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:0 12px 30px rgba(0,0,0,.12);
+  padding:10px;
+  z-index:1000;
+}
+.profile-menu.show{display:block;}
+.profile-email{
+  padding:10px 10px 12px;
+  border-bottom:1px solid #edf2ef;
+  color:var(--muted);
+  font-size:12px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.profile-menu button{
+  width:100%;display:block;text-align:left;
+  padding:10px;border:0;background:transparent;
+  color:var(--text);font-size:13px;border-radius:8px;cursor:pointer;
+}
+.profile-menu button:hover{background:var(--green-soft);}
+.profile-menu .logout{color:#b42318;}
+
+.sv-login-wrapper{
+  min-height:100vh;
+  background:linear-gradient(135deg,#0e4d31,#176b45);
+  display:flex;align-items:center;justify-content:center;
+  gap:55px;padding:24px;
+}
+.sv-login-brand{
+  width:250px;color:#fff;text-align:center;
+}
+.sv-login-logo{
+  width:105px;height:105px;margin:0 auto 18px;border-radius:50%;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 12px 30px rgba(0,0,0,.16);
+}
+.sv-login-logo svg{width:70px;height:70px;}
+.sv-login-brand h1{font-size:28px;letter-spacing:.5px;margin-bottom:7px;}
+.sv-login-brand p{font-size:14px;line-height:1.6;opacity:.88;}
+.sv-login-card{
+  width:355px;background:#fff;border-radius:10px;padding:34px 38px;
+  box-shadow:0 18px 45px rgba(23,107,69,.16);
+}
+.sv-login-card h2{text-align:center;font-size:25px;font-weight:400;margin-bottom:27px;}
+.sv-form-group{margin-bottom:18px;}
+.sv-login-card label{display:block;font-size:13px;margin-bottom:7px;}
+.sv-login-card input[type="email"],
+.sv-login-card input[type="password"],
+.sv-login-card input[type="text"]{
+  width:100%;height:50px;border:1px solid #dfe5e1;padding:0 15px;
+  font-size:13px;outline:none;transition:.2s;
+}
+.sv-login-card input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(23,107,69,.08);}
+.sv-login-card input::placeholder{color:#8b9691;}
+.sv-show-password{
+  display:flex!important;align-items:center;gap:5px;
+  font-size:12px!important;margin-top:-8px;margin-bottom:16px;color:#34443e;
+}
+.sv-show-password input{width:12px!important;height:12px!important;}
+.sv-sign-in{
+  width:100%;height:44px;border:none;background:var(--green);color:#fff;
+  font-weight:bold;font-size:12px;cursor:pointer;transition:.2s;
+}
+.sv-sign-in:hover{background:var(--green-dark);}
+.sv-message{min-height:18px;text-align:center;font-size:12px;margin-top:12px;}
+.sv-message.error{color:#b42318;}
+.sv-login-links{text-align:center;margin-top:20px;font-size:12px;line-height:1.9;}
+.sv-login-links a{color:var(--green);text-decoration:none;}
+.sv-login-links a:hover{text-decoration:underline;}
+
+@media(max-width:720px){
+  .sv-login-wrapper{flex-direction:column;gap:25px;}
+  .sv-login-brand{width:auto;}
+  .sv-login-logo{width:75px;height:75px;margin-bottom:10px;}
+  .sv-login-logo svg{width:50px;height:50px;}
+  .sv-login-brand h1{font-size:23px;}
+  .sv-login-brand p{display:none;}
+  .sv-login-card{width:min(355px,100%);}
+}
+@media(max-width:760px){
+  .profile-name,.profile-arrow{display:none;}
+}
+
+
+/* ===== Final UI/UX positioning adjustments ===== */
+
+/* Header: branding closer to the left, navigation closer to the right */
+.navbar{
+  max-width:none;
+  width:100%;
+  padding:16px 48px;
+}
+.navbar .logo{
+  margin-left:8px;
+}
+.navbar nav{
+  margin-left:auto;
+  align-items:center;
+  justify-content:flex-end;
+}
+.navbar nav a{
+  padding:10px 15px;
+}
+
+/* Keep all internal page content slightly away from the extreme left edge */
+#appScreen main{
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:40px 60px;
+}
+
+/* Login: full screen green, brand left and login card toward the right */
+#loginScreen{
+  width:100%;
+  min-height:100vh;
+  background:linear-gradient(135deg,#0e4d31,#176b45);
+}
+#loginScreen .sv-login-wrapper{
+  width:100%;
+  min-height:100vh;
+  background:transparent;
+  justify-content:space-between;
+  padding:40px 11%;
+  gap:60px;
+}
+#loginScreen .sv-login-brand{
+  margin-left:0;
+  text-align:left;
+}
+#loginScreen .sv-login-logo{
+  margin-left:0;
+  margin-right:0;
+}
+#loginScreen .sv-login-card{
+  margin-left:auto;
+  margin-right:2%;
+}
+
+/* Slightly smaller spacing on medium screens */
+@media(max-width:900px){
+  #loginScreen .sv-login-wrapper{
+    padding:35px 7%;
+  }
+  #loginScreen .sv-login-card{
+    margin-right:0;
+  }
+  #appScreen main{
+    padding:36px 42px;
+  }
+}
+@media(max-width:620px){
+  .navbar{
+    padding:14px 20px;
+  }
+  .navbar .logo{
+    margin-left:0;
+  }
+  #appScreen main{
+    padding:28px 20px;
+  }
+  #loginScreen .sv-login-wrapper{
+    padding:28px 20px;
+  }
+  #loginScreen .sv-login-brand{
+    text-align:center;
+  }
+  #loginScreen .sv-login-logo{
+    margin-left:auto;
+    margin-right:auto;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<section id="loginScreen">
+<div class="sv-login-wrapper">
+
+  <!-- Smart Village Logo / Branding -->
+  <div class="sv-login-brand">
+    <div class="sv-login-logo">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Smart Village logo">
+        <circle cx="50" cy="50" r="46" fill="#E9F7EF"/>
+        <path d="M50 72V40" stroke="#176B45" stroke-width="6" stroke-linecap="round"/>
+        <path d="M50 48C37 47 29 39 28 27C40 27 51 33 50 48Z" fill="#176B45"/>
+        <path d="M51 56C63 55 71 47 72 35C60 35 49 41 51 56Z" fill="#0E4D31"/>
+        <path d="M31 73H69" stroke="#176B45" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <h1>Smart Village</h1>
+    <p>Smart Soil Monitoring &amp; Irrigation System</p>
+  </div>
+
+  <!-- Login -->
+  <div class="sv-login-card">
+    <h2>Login</h2>
+
+    <form id="loginForm">
+      <div class="sv-form-group">
+        <label for="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter email"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="sv-form-group">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter password"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <label class="sv-show-password">
+        <input type="checkbox" id="showPassword">
+        <span>Show Password</span>
+      </label>
+
+      <button type="submit" class="sv-sign-in">SIGN IN</button>
+
+      <div id="message" class="sv-message"></div>
+    </form>
+
+    <div class="sv-login-links">
+      <div><a href="#" id="forgotLink">Forgot Username / Password?</a></div>
+      <div>Don't have an account? <a href="#" id="signupLink">Sign up</a></div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ================= APPLICATION ================= -->
+<div id="appScreen">
+
+<header id="appHeader">
+  <div class="navbar">
+    <a class="logo" href="#home" data-page="home">🌱 Smart Village<span>Soil Monitoring & Smart Irrigation</span></a>
+    <nav>
+      <a href="#home" data-page="home" class="nav-link active">Home</a>
+      <a href="#dashboard" data-page="dashboard" class="nav-link">Dashboard</a>
+      <a href="#monitoring" data-page="monitoring" class="nav-link">Monitoring</a>
+      <a href="#irrigation" data-page="irrigation" class="nav-link">Irrigation</a>
+
+      <div class="profile-wrap" id="profileWrap">
+        <button class="profile-btn" id="profileBtn" type="button" aria-label="Open profile menu">
+          <span class="profile-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M5.5 19c.7-3.1 3-5 6.5-5s5.8 1.9 6.5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="profile-name">Profile</span>
+          <span class="profile-arrow">▼</span>
+        </button>
+
+        <div class="profile-menu" id="profileMenu">
+          <div class="profile-email" id="profileEmail">Logged in</div>
+          <button type="button" class="profile-dashboard" data-page="dashboard">Dashboard</button>
+          <button type="button" class="logout" id="logoutBtn">Log Out</button>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+
+<main>
+  <section id="page-home" class="app-page">
+    <section class="hero">
+    <h1>Smart Soil Monitoring & Irrigation</h1>
+    <p>
+      A smart agriculture module that monitors soil moisture and helps control
+      irrigation efficiently using an ESP-based IoT system.
+    </p>
+    <a class="btn" href="#dashboard" data-page="dashboard">Open Dashboard</a>
+    <a class="btn secondary" href="#monitoring" data-page="monitoring">View Monitoring</a>
+  </section>
+
+  <div class="section-title">
+    <h2>System Features</h2>
+    <p>Everything you need to monitor soil and manage irrigation.</p>
+  </div>
+
+  <section class="grid">
+    <div class="card"><div class="icon">💧</div><h3>Soil Moisture</h3><p>Reads soil moisture data from the sensor through ESP.</p></div>
+    <div class="card"><div class="icon">📡</div><h3>ESP Communication</h3><p>ESP can send sensor readings to the backend through Wi-Fi.</p></div>
+    <div class="card"><div class="icon">🚿</div><h3>Smart Irrigation</h3><p>Monitor and control the water pump using automatic or manual mode.</p></div>
+  </section>
+
+  <div class="section-title">
+    <h2>How It Works</h2>
+    <p>The complete flow of the soil irrigation module.</p>
+  </div>
+
+  <section class="grid">
+    <div class="card"><div class="icon">1</div><h3>Sensor</h3><p>The soil moisture sensor measures the moisture level.</p></div>
+    <div class="card"><div class="icon">2</div><h3>ESP</h3><p>ESP reads the sensor and communicates over Wi-Fi.</p></div>
+    <div class="card"><div class="icon">3</div><h3>Dashboard</h3><p>The web interface displays the latest system information.</p></div>
+  </section>
+  </section>
+
+  <section id="page-dashboard" class="app-page">
+    <div class="page-head">
+    <h1>Dashboard</h1>
+    <p>Overview of the soil monitoring and irrigation system.</p>
+  </div>
+
+  <section class="stats">
+    <div class="stat"><small>Soil Moisture</small><div class="value" id="moisture">--%</div><span class="status" id="soilStatus">Loading...</span></div>
+    <div class="stat"><small>Pump Status</small><div class="value" id="pumpStatus">--</div><span class="status off" id="pumpBadge">Loading...</span></div>
+    <div class="stat"><small>System Mode</small><div class="value" id="systemMode">--</div><span class="status" id="modeBadge">Loading...</span></div>
+    <div class="stat"><small>ESP Status</small><div class="value" id="espStatus">--</div><span class="status">Device</span></div>
+  </section>
+
+  <section class="two-col">
+    <div class="card">
+      <h3>Current System Information</h3>
+      <div class="info-row"><span>Moisture Level</span><strong id="moisture2">--%</strong></div>
+      <div class="info-row"><span>Soil Condition</span><strong id="soilStatus2">--</strong></div>
+      <div class="info-row"><span>Pump</span><strong id="pumpStatus2">--</strong></div>
+      <div class="info-row"><span>Mode</span><strong id="systemMode2">--</strong></div>
+      <div class="info-row"><span>Last Updated</span><strong id="updated">--</strong></div>
+    </div>
+    <div class="card">
+      <h3>Quick Actions</h3>
+      <p style="margin:12px 0 18px">Go directly to system controls or sensor history.</p>
+      <a class="btn" href="#irrigation" data-page="irrigation">Irrigation Control</a>
+      <br><br>
+      <a class="btn secondary" href="#monitoring" data-page="monitoring">Monitoring History</a>
+    </div>
+  </section>
+  </section>
+
+  <section id="page-monitoring" class="app-page">
+    <div class="page-head">
+    <h1>Soil Monitoring</h1>
+    <p>View the latest soil moisture readings and system condition.</p>
+  </div>
+
+  <section class="stats">
+    <div class="stat"><small>Current Moisture</small><div class="value" id="currentMoisture">--%</div></div>
+    <div class="stat"><small>Soil Condition</small><div class="value" id="currentCondition">--</div></div>
+    <div class="stat"><small>Sensor</small><div class="value" id="sensorStatus">--</div></div>
+    <div class="stat"><small>Updated</small><div class="value" id="monitorUpdated" style="font-size:18px">--</div></div>
+  </section>
+
+  <div class="card" style="margin-top:20px">
+    <h3>Recent Readings</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Time</th><th>Moisture</th><th>Condition</th><th>Pump</th></tr></thead>
+        <tbody id="historyBody">
+          <tr><td>--</td><td>--</td><td>Loading...</td><td>--</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="notice">Demo values are generated locally for frontend testing. Later, JavaScript can fetch real values from your backend API.</div>
+  </div>
+  </section>
+
+  <section id="page-irrigation" class="app-page">
+    <div class="page-head">
+    <h1>Irrigation Control</h1>
+    <p>Manage automatic and manual irrigation settings.</p>
+  </div>
+
+  <section class="two-col">
+    <div class="card">
+      <h3>Control Mode</h3>
+      <p>Select how the pump should be controlled.</p>
+      <div class="control-box">
+        <button class="mode-btn selected" id="autoBtn" onclick="setMode('AUTO')">AUTO</button>
+        <button class="mode-btn" id="manualBtn" onclick="setMode('MANUAL')">MANUAL</button>
+      </div>
+      <div class="notice" id="modeMessage">Automatic mode is active. Pump status is controlled by the moisture level.</div>
+    </div>
+
+    <div class="card">
+      <h3>Pump Control</h3>
+      <p>Manual pump control is available only in MANUAL mode.</p>
+      <div style="margin-top:20px">
+        <button class="pump-btn" id="pumpBtn" onclick="togglePump()" disabled>Turn Pump ON</button>
+      </div>
+      <div class="info-row" style="margin-top:15px"><span>Current Pump</span><strong id="irrigationPump">OFF</strong></div>
+      <div class="info-row"><span>Moisture</span><strong id="irrigationMoisture">--%</strong></div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:20px">
+    <h3>Smart Irrigation Rule</h3>
+    <p>
+      In this frontend demo, AUTO mode turns the pump ON when moisture is below
+      35% and turns it OFF when moisture reaches 55% or above.
+      These thresholds can later be controlled by your backend.
+    </p>
+  </section>
+  </section>
+</main>
+
+<footer>Smart Village Management System • Soil Monitoring & Smart Irrigation</footer>
+</div>
+
+
+<script>
+/* =========================
+   Smart Village SPA Frontend
+   ========================= */
+
+const appSections = {
+  home: document.getElementById("page-home"),
+  dashboard: document.getElementById("page-dashboard"),
+  monitoring: document.getElementById("page-monitoring"),
+  irrigation: document.getElementById("page-irrigation")
+};
+
+function showPage(page){
+  if(!appSections[page]) page = "home";
+
+  Object.entries(appSections).forEach(([name, section]) => {
+    section.style.display = name === page ? "block" : "none";
+  });
+
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.classList.toggle("active", link.dataset.page === page);
+  });
+
+  window.scrollTo({top:0, behavior:"smooth"});
+  location.hash = page;
+}
+
+/* ---------- Login ---------- */
+const loginForm = document.getElementById("loginForm");
+const loginPassword = document.getElementById("password");
+const showPassword = document.getElementById("showPassword");
+const loginMessage = document.getElementById("message");
+
+if(showPassword){
+  showPassword.addEventListener("change", function(){
+    loginPassword.type = this.checked ? "text" : "password";
+  });
+}
+
+function openApp(){
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("appScreen").style.display = "block";
+
+  const email = localStorage.getItem("smartVillageEmail");
+  document.getElementById("profileEmail").textContent = email || "Logged in";
+
+  const requestedPage = location.hash.replace("#","");
+  showPage(appSections[requestedPage] ? requestedPage : "home");
+}
+
+function openLogin(){
+  document.getElementById("appScreen").style.display = "none";
+  document.getElementById("loginScreen").style.display = "flex";
+}
+
+loginForm.addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const pass = loginPassword.value.trim();
+
+  if(!email || !pass){
+    loginMessage.textContent = "Please enter your email and password.";
+    loginMessage.className = "sv-message error";
+    return;
+  }
+
+  /* Temporary frontend login session.
+     Later this will be replaced by PHP + MySQL authentication. */
+  localStorage.setItem("smartVillageLoggedIn", "true");
+  localStorage.setItem("smartVillageEmail", email);
+
+  loginMessage.textContent = "Login successful. Opening Smart Village...";
+  loginMessage.className = "sv-message";
+
+  setTimeout(openApp, 400);
+});
+
+document.getElementById("forgotLink").addEventListener("click", function(e){
+  e.preventDefault();
+  loginMessage.textContent = "Password recovery will be connected to the backend.";
+  loginMessage.className = "sv-message";
+});
+
+document.getElementById("signupLink").addEventListener("click", function(e){
+  e.preventDefault();
+  loginMessage.textContent = "User registration will be added with the backend.";
+  loginMessage.className = "sv-message";
+});
+
+/* ---------- Navigation ---------- */
+document.querySelectorAll("[data-page]").forEach(link => {
+  link.addEventListener("click", function(e){
+    e.preventDefault();
+    showPage(this.dataset.page);
+  });
+});
+
+window.addEventListener("hashchange", function(){
+  if(localStorage.getItem("smartVillageLoggedIn") === "true"){
+    const page = location.hash.replace("#","");
+    if(appSections[page]) showPage(page);
+  }
+});
+
+/* ---------- Profile ---------- */
+const profileBtn = document.getElementById("profileBtn");
+const profileMenu = document.getElementById("profileMenu");
+
+profileBtn.addEventListener("click", function(e){
+  e.stopPropagation();
+  profileMenu.classList.toggle("show");
+});
+
+document.addEventListener("click", function(e){
+  if(!document.getElementById("profileWrap").contains(e.target)){
+    profileMenu.classList.remove("show");
+  }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", function(){
+  localStorage.removeItem("smartVillageLoggedIn");
+  localStorage.removeItem("smartVillageEmail");
+  profileMenu.classList.remove("show");
+  location.hash = "";
+  openLogin();
+});
+
+/* ---------- Dashboard demo logic ---------- */
+let state = {
+  moisture: 58,
+  pump: "OFF",
+  mode: "AUTO",
+  esp: "Online"
+};
+
+function soilCondition(m){
+  if(m < 35) return "DRY";
+  if(m < 55) return "MODERATE";
+  return "WET";
+}
+
+function updateDashboard(){
+  const condition = soilCondition(state.moisture);
+  document.getElementById("moisture").textContent = state.moisture+"%";
+  document.getElementById("moisture2").textContent = state.moisture+"%";
+  document.getElementById("soilStatus").textContent = condition;
+  document.getElementById("soilStatus2").textContent = condition;
+  document.getElementById("pumpStatus").textContent = state.pump;
+  document.getElementById("pumpStatus2").textContent = state.pump;
+  document.getElementById("pumpBadge").textContent = state.pump;
+  document.getElementById("systemMode").textContent = state.mode;
+  document.getElementById("systemMode2").textContent = state.mode;
+  document.getElementById("modeBadge").textContent = state.mode;
+  document.getElementById("espStatus").textContent = state.esp;
+  document.getElementById("updated").textContent = new Date().toLocaleTimeString();
+}
+updateDashboard();
+
+/* ---------- Monitoring demo logic ---------- */
+let monitoringMoisture = 58;
+let readings = [];
+
+function condition(m){
+  return m < 35 ? "DRY" : m < 55 ? "MODERATE" : "WET";
+}
+
+function renderMonitoring(){
+  document.getElementById("currentMoisture").textContent = monitoringMoisture+"%";
+  document.getElementById("currentCondition").textContent = condition(monitoringMoisture);
+  document.getElementById("sensorStatus").textContent = "Connected";
+  document.getElementById("monitorUpdated").textContent = new Date().toLocaleTimeString();
+
+  readings.unshift({
+    time:new Date().toLocaleTimeString(),
+    moisture:monitoringMoisture,
+    condition:condition(monitoringMoisture),
+    pump:monitoringMoisture < 35 ? "ON" : "OFF"
+  });
+
+  readings = readings.slice(0,8);
+
+  document.getElementById("historyBody").innerHTML = readings.map(r =>
+    `<tr><td>${r.time}</td><td>${r.moisture}%</td><td>${r.condition}</td><td>${r.pump}</td></tr>`
+  ).join("");
+}
+renderMonitoring();
+
+/* ---------- Irrigation demo logic ---------- */
+let mode = "AUTO";
+let pump = false;
+let irrigationMoisture = 58;
+
+function updateIrrigation(){
+  document.getElementById("autoBtn").classList.toggle("selected", mode==="AUTO");
+  document.getElementById("manualBtn").classList.toggle("selected", mode==="MANUAL");
+  document.getElementById("pumpBtn").disabled = mode!=="MANUAL";
+  document.getElementById("pumpBtn").classList.toggle("on", pump);
+  document.getElementById("pumpBtn").textContent = pump ? "Turn Pump OFF" : "Turn Pump ON";
+  document.getElementById("irrigationPump").textContent = pump ? "ON" : "OFF";
+  document.getElementById("irrigationMoisture").textContent = irrigationMoisture+"%";
+  document.getElementById("modeMessage").textContent =
+    mode==="AUTO"
+      ? "Automatic mode is active. Pump status is controlled by the moisture level."
+      : "Manual mode is active. You can control the pump yourself.";
+}
+
+function setMode(m){
+  mode = m;
+  if(mode==="AUTO") autoControl();
+  updateIrrigation();
+}
+
+function togglePump(){
+  if(mode==="MANUAL"){
+    pump = !pump;
+    updateIrrigation();
+  }
+}
+
+function autoControl(){
+  if(mode!=="AUTO") return;
+  if(irrigationMoisture < 35) pump = true;
+  if(irrigationMoisture >= 55) pump = false;
+}
+
+updateIrrigation();
+
+/* Demo timers — these will later be replaced with backend API polling. */
+setInterval(() => {
+  monitoringMoisture = Math.max(20, Math.min(85, monitoringMoisture + (Math.random()>.5 ? 2 : -2)));
+  renderMonitoring();
+}, 5000);
+
+setInterval(() => {
+  irrigationMoisture = Math.max(20, Math.min(85, irrigationMoisture + (Math.random()>.5 ? 3 : -3)));
+  autoControl();
+  updateIrrigation();
+}, 5000);
+
+/* ---------- Initial screen ---------- */
+if(localStorage.getItem("smartVillageLoggedIn") === "true"){
+  openApp();
+}else{
+  openLogin();
+}
+</script>
+
+
+</body>
+</html>
