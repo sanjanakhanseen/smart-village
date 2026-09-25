@@ -1,0 +1,27 @@
+CREATE DATABASE IF NOT EXISTS smart_village;
+USE smart_village;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sensor_data (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    moisture FLOAT NOT NULL,
+    pump_status VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE device_control (
+    id INT PRIMARY KEY,
+    mode VARCHAR(10) NOT NULL DEFAULT 'AUTO',
+    pump_command VARCHAR(10) NOT NULL DEFAULT 'OFF',
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO device_control (id, mode, pump_command)
+VALUES (1, 'AUTO', 'OFF');
